@@ -1,0 +1,2 @@
+csc /target:library /out:DLL/ansible_host.dll /home/matthew/Desktop/C#_test/AnsibleHost.cs
+

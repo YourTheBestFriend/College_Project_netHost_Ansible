@@ -1,0 +1,52 @@
+﻿<Window x:Class="WPF_app_for_admin.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_app_for_admin"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="504" Width="931">
+    <Grid RenderTransformOrigin="0.5,0.5">
+        <Grid.RenderTransform>
+            <TransformGroup>
+                <ScaleTransform/>
+                <SkewTransform/>
+                <RotateTransform Angle="0.304"/>
+                <TranslateTransform/>
+            </TransformGroup>
+        </Grid.RenderTransform>
+        <TabControl>
+            <TabItem Header="Main">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="83*"/>
+                        <ColumnDefinition Width="711*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Content="Check list of nodes" HorizontalAlignment="Left" Margin="9,16,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="268" Click="Button_Click_1"/>
+                    <TextBox Name="TextBoxAllRemoteHost" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="8,49,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="269" Height="395"/>
+                    <Label Grid.Column="1" Content="Hostname / all" HorizontalAlignment="Left" Margin="617,5,0,0" VerticalAlignment="Top"/>
+                    <TextBox Name="TextBoxtHostnameOrAll" Grid.Column="1" Margin="716,10,13,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+                    <Button Grid.Column="1" Content="Ping" Margin="717,34,12,0" VerticalAlignment="Top" Click="Button_Click_2"/>
+                    <Button Grid.Column="1" Content="SystemInfo" Margin="717,62,12,0" VerticalAlignment="Top" Click="Button_Click_3"/>
+                    <Button Grid.Column="1" Content="Programms" Margin="717,89,12,0" VerticalAlignment="Top"/>
+                    <TextBox Name="OutputTextBox" Grid.Column="1" HorizontalAlignment="Left" Margin="193,50,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="509" Height="394"/>
+                    <Label Grid.Column="1" Content="Output" HorizontalAlignment="Left" Margin="415,22,0,0" VerticalAlignment="Top"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="CreateNode">
+                <Grid Background="#FFE5E5E5">
+                    <TextBox Name="TextBoxHosIpV4" HorizontalAlignment="Left" Margin="86,9,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+                    <TextBox Name="TextBoxHostName" HorizontalAlignment="Left" Margin="86,37,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+                    <Label Content="host ipv4" HorizontalAlignment="Left" Margin="8,7,0,0" VerticalAlignment="Top"/>
+                    <Label Content="hostname" HorizontalAlignment="Left" Margin="8,33,0,0" VerticalAlignment="Top"/>
+                    <TextBox Name="TextBoxPassword" HorizontalAlignment="Left" Margin="86,62,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+                    <Button Content="Set host" HorizontalAlignment="Left" Margin="13,92,0,0" VerticalAlignment="Top" Width="192" Click="Button_Click"/>
+                    <Label Content="password" HorizontalAlignment="Left" Margin="8,59,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Logs output" HorizontalAlignment="Left" Margin="11,146,0,0" VerticalAlignment="Top"/>
+                    <TextBox Name="TextBox_Logs" HorizontalAlignment="Center" Margin="0,170,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="895" Height="283"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>
