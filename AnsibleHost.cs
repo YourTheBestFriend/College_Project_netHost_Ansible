@@ -46,6 +46,7 @@ namespace CSharpAnsible
 
         // In the future 1/0 - windows or linux remote host
         // (because for windows you need use winrm on host and start PWSH script on remote host)
+        public AnsibleHost() {}
         public AnsibleHost(string hostIpV4, string hostname, string password, string os)
         {
             proc = new Process();
@@ -61,7 +62,7 @@ namespace CSharpAnsible
         }
 
         // method for write string on file hosts (for manage via ansible)
-        public string CreateNodeAnsible() => $"\n[{Hostname}]\n{HostIpV4}\n[{Hostname}:vars]\nansible_user = {Hostname}\nansible_password = {Password}\nansible_port = 5986\nansible_connection = winrm\nansible_winrm_server_cert_validation = ignore"; // may change port in the future, 5986 - default
+        public string CreateNodeAnsible() => OS.ToLower() =="linux"?($"\n[{Hostname}]\n{HostIpV4}\n[{Hostname}:vars]\nansible_user = {Hostname}\nansible_password = {Password}\nansible_port = 5986"):($"\n[{Hostname}]\n{HostIpV4}\n[{Hostname}:vars]\nansible_user = {Hostname}\nansible_password = {Password}\nansible_port = 5986\nansible_connection = winrm\nansible_winrm_server_cert_validation = ignore"); // may change port in the future, 5986 - default
 
         public void WriteOnAnsibleHostFile()
         {
@@ -73,21 +74,21 @@ namespace CSharpAnsible
         // check all hosts
         public string GetListHosts()
         {
-            Command = $"ansible all --list-host"; // Только тут надо выводить названия
+            Command = $"ansible all --list-host"; 
             proc.StartInfo.Arguments = " -c \" " + Command + " \"";
             proc.Start();
             return proc.StandardOutput.ReadToEnd();
         }
         public string PingHost(string host_name)
         {
-            Command = $"ansible {host_name} -m win_ping"; // Только тут надо выводить названия
+            Command = $"ansible {host_name} -m win_ping"; 
             proc.StartInfo.Arguments = " -c \" " + Command + " \"";
             proc.Start();
             return proc.StandardOutput.ReadToEnd();
         }
         public string PrintSystemInfo(string host_name)
         {
-            Command = $"ansible {host_name} -m win_shell -a \"systeminfo\"";; // Только тут надо выводить названия
+            Command = $"ansible {host_name} -m win_shell -a \"systeminfo\"";
             proc.StartInfo.Arguments = " -c \" " + Command + " \"";
             proc.Start();
             return proc.StandardOutput.ReadToEnd();
@@ -95,7 +96,7 @@ namespace CSharpAnsible
 
         public string MyCommand(string host_name, string command)
         {
-            Command = $"ansible {host_name} -m win_shell -a \"{command}\"";; // Только тут надо выводить названия
+            Command = $"ansible {host_name} -m win_shell -a \"{command}\"";
             proc.StartInfo.Arguments = " -c \" " + Command + " \"";
             proc.Start();
             return proc.StandardOutput.ReadToEnd();

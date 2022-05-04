@@ -1,2 +1,1 @@
-csc /target:library /out:DLL/ansible_host.dll /home/matthew/Desktop/C#_test/AnsibleHost.cs
-
+csc /target:library /out:DLL/ansible_host.dll /home/matthew/Desktop/College_Project_netHost_Ansible/AnsibleHost.cs
