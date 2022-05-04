@@ -1,9 +1,35 @@
 from sys import *
-import clr
-clr.AddReference('DLL/ansible_host') # Include Lib
+from clr import *
+from PySide6.QtWidgets import* # QApplication, QMainWindow
+from PySide6.QtCore import* # QFile
+from netHost import Ui_Dialog
+AddReference('DLL/ansible_host') # Include Lib
 from CSharpAnsible import AnsibleHost # Import C# DLL
 
-AnsibleHost = AnsibleHost('192.168.43.101', 'Artiom', 'azazin')
+class MainWindow(QMainWindow):
+     def __init__(self):
+        # Для отрисовки
+        super(MainWindow, self).__init__()
+        self.ui = Ui_Dialog()
+        self.ui.setupUi(self)
+
+# main functions
+def set_host():
+    AnsibleHost = AnsibleHost(ui.lineEdit.text(), ui.lineEdit_2.text(), \
+                              ui.lineEdit_3.text(), ui.lineEdit_4.text())
+
+
+# Create Application 
+app = QApplication(argv)
+ui = MainWindow()
+ui.show()
+
+# set host 
+ui.pushButton.clicked.connect(set_host)
+
+exit(app.exec())
+
+
 
 # OS 
 host = ''
@@ -28,4 +54,4 @@ host = ''
 #print(AnsibleHost.PrintSystemInfo('Artiom'))
 
 # My Command 
-print(AnsibleHost.MyCommand('Artiom', 'dir'))
+#print(AnsibleHost.MyCommand('Artiom', 'dir'))

@@ -15,6 +15,7 @@ namespace CSharpAnsible
         private string hostIpV4;
         private string hostname;
         private string password;
+        private string os;
         
         // assetors
         public string HostIpV4
@@ -37,10 +38,15 @@ namespace CSharpAnsible
             set { command = value; }
             get { return command;}
         }
+        public string OS 
+        {
+            set { os = value; }
+            get { return os;}
+        }
 
         // In the future 1/0 - windows or linux remote host
         // (because for windows you need use winrm on host and start PWSH script on remote host)
-        public AnsibleHost(string hostIpV4, string hostname, string password)
+        public AnsibleHost(string hostIpV4, string hostname, string password, string os)
         {
             proc = new Process();
             // paramets for Proccess
@@ -51,6 +57,7 @@ namespace CSharpAnsible
             HostIpV4 = hostIpV4;
             Hostname = hostname;
             Password = password;
+            OS = os;
         }
 
         // method for write string on file hosts (for manage via ansible)
