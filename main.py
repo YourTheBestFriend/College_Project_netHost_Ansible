@@ -48,7 +48,7 @@ class MainWindow(QMainWindow):
             
             self.ui.textEdit_2.setText('get_program')
         except:
-            self.ui.textEdit_2.setText('Error get_systeminfo')
+            self.ui.textEdit_2.setText('Error get_program')
 
 # Create Application 
 app = QApplication(argv)
