@@ -15,7 +15,7 @@ namespace CSharpAnsible
         private string hostIpV4;
         private string hostname;
         private string password;
-        private string os;
+        // private string os;
         
         // assetors
         public string HostIpV4
@@ -38,16 +38,16 @@ namespace CSharpAnsible
             set { command = value; }
             get { return command;}
         }
-        public string OS 
-        {
-            set { os = value; }
-            get { return os;}
-        }
+        // public string OS 
+        // {
+        //     set { os = value; }
+        //     get { return os;}
+        // }
 
         // In the future 1/0 - windows or linux remote host
         // (because for windows you need use winrm on host and start PWSH script on remote host)
         public AnsibleHost() {}
-        public AnsibleHost(string hostIpV4, string hostname, string password, string os)
+        public AnsibleHost(string hostIpV4, string hostname, string password/*, string os*/)
         {
             proc = new Process();
             // paramets for Proccess
@@ -58,11 +58,12 @@ namespace CSharpAnsible
             HostIpV4 = hostIpV4;
             Hostname = hostname;
             Password = password;
-            OS = os;
+            // OS = os;
         }
 
         // method for write string on file hosts (for manage via ansible)
-        public string CreateNodeAnsible() => OS.ToLower() =="linux"?($"\n[{Hostname}]\n{HostIpV4}\n[{Hostname}:vars]\nansible_user = {Hostname}\nansible_password = {Password}\nansible_port = 5986"):($"\n[{Hostname}]\n{HostIpV4}\n[{Hostname}:vars]\nansible_user = {Hostname}\nansible_password = {Password}\nansible_port = 5986\nansible_connection = winrm\nansible_winrm_server_cert_validation = ignore"); // may change port in the future, 5986 - default
+        // public string CreateNodeAnsible() => OS.ToLower() =="linux"?($"\n[{Hostname}]\n{HostIpV4}\n[{Hostname}:vars]\nansible_user = {Hostname}\nansible_password = {Password}\nansible_port = 5986"):($"\n[{Hostname}]\n{HostIpV4}\n[{Hostname}:vars]\nansible_user = {Hostname}\nansible_password = {Password}\nansible_port = 5986\nansible_connection = winrm\nansible_winrm_server_cert_validation = ignore"); // may change port in the future, 5986 - default
+        public string CreateNodeAnsible() => $"\n[{Hostname}]\n{HostIpV4}\n[{Hostname}:vars]\nansible_user = {Hostname}\nansible_password = {Password}\nansible_port = 5986\nansible_connection = winrm\nansible_winrm_server_cert_validation = ignore"; // may change port in the future, 5986 - default
 
         public void WriteOnAnsibleHostFile()
         {
@@ -89,6 +90,17 @@ namespace CSharpAnsible
         public string PrintSystemInfo(string host_name)
         {
             Command = $"ansible {host_name} -m win_shell -a \"systeminfo\"";
+            proc.StartInfo.Arguments = " -c \" " + Command + " \"";
+            proc.Start();
+            return proc.StandardOutput.ReadToEnd();
+        }
+        public string PrintProgram(string host_name)
+        {
+            string s_grep = "/s | findstr /B";
+            string s_64 = $"echo '============================64-bit===============================\n' & reg query \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall" + s_grep + "\".*DisplayName\"";
+            string s_32 = $"echo '============================32-bit===============================\n' & reg query \"HKLM\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall" + s_grep + "\".*DisplayName\"";
+            
+            Command = $"ansible {host_name} -m win_shell -a \"\"{s_64}\n{s_32}";
             proc.StartInfo.Arguments = " -c \" " + Command + " \"";
             proc.Start();
             return proc.StandardOutput.ReadToEnd();
