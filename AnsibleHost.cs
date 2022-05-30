@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CSharpAnsible
@@ -38,12 +39,6 @@ namespace CSharpAnsible
             set { command = value; }
             get { return command;}
         }
-        // public string OS 
-        // {
-        //     set { os = value; }
-        //     get { return os;}
-        // }
-
         // In the future 1/0 - windows or linux remote host
         // (because for windows you need use winrm on host and start PWSH script on remote host)
         public AnsibleHost() {}
@@ -54,11 +49,11 @@ namespace CSharpAnsible
             proc.StartInfo.UseShellExecute = false;
             proc.StartInfo.FileName = "bash"; // ApplicationName= !(bash)
             proc.StartInfo.RedirectStandardOutput = true;
+            
             // in assetors write exception for verify data
             HostIpV4 = hostIpV4;
             Hostname = hostname;
             Password = password;
-            // OS = os;
         }
 
         // method for write string on file hosts (for manage via ansible)
@@ -96,20 +91,22 @@ namespace CSharpAnsible
         }
         public string PrintProgram(string host_name)
         {
-            string s_grep = "/s | findstr /B";
-            string s_64 = $"echo '============================64-bit===============================\n' & reg query \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall" + s_grep + "\".*DisplayName\"";
-            string s_32 = $"echo '============================32-bit===============================\n' & reg query \"HKLM\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall" + s_grep + "\".*DisplayName\"";
-            
-            Command = $"ansible {host_name} -m win_shell -a \"\"{s_64}\n{s_32}";
+            // string s_grep = "/s | findstr /B";
+            //string s_64 = $"echo '============================64-bit===============================\n' & reg query \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall";
+            //string s_32 = $"echo '============================32-bit===============================\n' & reg query \"HKLM\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall";
+            //string s_64 = $"Get-WmiObject Win32_Product -ComputerName $pcname | select Name,Version";
+            string s_64 = "Get-ItemProperty HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\* |  Select-Object DisplayName"; // , DisplayVersion, Publisher, InstallDate | Format-Table -AutoSize > file.txt | type file.txt // // | Set-Content -Path p.txt | type p.txt
+            Command = $"ansible {host_name} -m win_shell -a \"{s_64}\"";
             proc.StartInfo.Arguments = " -c \" " + Command + " \"";
             proc.Start();
+            // proc.WaitForExit();
+            System.Console.WriteLine(proc.StandardOutput.ReadToEnd());
             return proc.StandardOutput.ReadToEnd();
         }
-
-        public string MyCommand(string host_name, string command)
+        public string MyCommand(string command) // host_name
         {
-            Command = $"ansible {host_name} -m win_shell -a \"{command}\"";
-            proc.StartInfo.Arguments = " -c \" " + Command + " \"";
+            // Command = $"ansible {host_name} -m win_shell -a \"{command}\"";
+            proc.StartInfo.Arguments = " -c \" " + command + " \""; // Command
             proc.Start();
             return proc.StandardOutput.ReadToEnd();
         }
