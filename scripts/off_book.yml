@@ -1,0 +1,8 @@
+---
+- name: Terminate Opera 
+  hosts: all
+  tasks:
+    - name: close opera
+      win_shell: Stop-Process -Name opera
+    - name: Reboot System
+      win_shell: shutdown /r -t 0

@@ -1,0 +1,17 @@
+---
+- name: My PlayBook
+  hosts: all
+  tasks:
+    - name: Copy Main Script
+      win_copy: 
+        src: scripts/script_p.ps1
+        dest: C:\script_p.ps1
+    
+    - name: Start Script    
+      win_shell: C:\script_p.ps1
+        
+    - name: Return
+      fetch:
+        src: C:\log_process.txt
+        dest: /tmp/
+        flat: yes

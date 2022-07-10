@@ -1,0 +1,6 @@
+[Need]
+1. Install - Ansible, winrm (via pip) - for windows
+2. hosts - must be /etc/ansible/hosts
+3. On windows host execute *ps1 script https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1
+4. Set all file *yml - /etc/ansible/
+5. Set all file *ps1 - /etc/ansible/scripts/

@@ -55,15 +55,12 @@ namespace CSharpAnsible
             Hostname = hostname;
             Password = password;
         }
-
-        // method for write string on file hosts (for manage via ansible)
-        // public string CreateNodeAnsible() => OS.ToLower() =="linux"?($"\n[{Hostname}]\n{HostIpV4}\n[{Hostname}:vars]\nansible_user = {Hostname}\nansible_password = {Password}\nansible_port = 5986"):($"\n[{Hostname}]\n{HostIpV4}\n[{Hostname}:vars]\nansible_user = {Hostname}\nansible_password = {Password}\nansible_port = 5986\nansible_connection = winrm\nansible_winrm_server_cert_validation = ignore"); // may change port in the future, 5986 - default
         public string CreateNodeAnsible() => $"\n[{Hostname}]\n{HostIpV4}\n[{Hostname}:vars]\nansible_user = {Hostname}\nansible_password = {Password}\nansible_port = 5986\nansible_connection = winrm\nansible_winrm_server_cert_validation = ignore"; // may change port in the future, 5986 - default
 
         public void WriteOnAnsibleHostFile()
         {
             // >> add, rewrite > ////// echo '{CreateNodeAnsible()}' >> /etc/ansible/hosts
-            Command = $"sudo chmod a+w /etc/ansible/hosts | echo '{CreateNodeAnsible()}' >> /etc/ansible/hosts"; // pattern for write string - $"echo /"WritePattern/" > /etc/ansible/hosts" // !!! NEED to get access chmod 777 hosts
+            Command = $"echo '{CreateNodeAnsible()}' >> /etc/ansible/hosts"; // pattern for write string - $"echo /"WritePattern/" > /etc/ansible/hosts" // !!! NEED to get access chmod 777 hosts
             proc.StartInfo.Arguments = " -c \" " + Command + " \"";
             proc.Start();
         }
@@ -89,25 +86,42 @@ namespace CSharpAnsible
             proc.Start();
             return proc.StandardOutput.ReadToEnd();
         }
-        public string PrintProgram(string host_name)
+        public string PrintProgram_x32(string host_name)
         {
-            // string s_grep = "/s | findstr /B";
-            //string s_64 = $"echo '============================64-bit===============================\n' & reg query \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall";
-            //string s_32 = $"echo '============================32-bit===============================\n' & reg query \"HKLM\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall";
-            //string s_64 = $"Get-WmiObject Win32_Product -ComputerName $pcname | select Name,Version";
-            string s_64 = "Get-ItemProperty HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\* |  Select-Object DisplayName"; // , DisplayVersion, Publisher, InstallDate | Format-Table -AutoSize > file.txt | type file.txt // // | Set-Content -Path p.txt | type p.txt
-            Command = $"ansible {host_name} -m win_shell -a \"{s_64}\"";
+            Command = $"ansible-playbook -l {host_name} /etc/ansible/mytask.yml";
             proc.StartInfo.Arguments = " -c \" " + Command + " \"";
             proc.Start();
-            // proc.WaitForExit();
-            System.Console.WriteLine(proc.StandardOutput.ReadToEnd());
+            proc.WaitForExit();
+            proc.StartInfo.Arguments = " -c \" " + "cat /tmp/log_programs_x32.txt" + " \""; // Command,
+            proc.Start();
+            return proc.StandardOutput.ReadToEnd();
+        }
+        public string PrintProgram_x64(string host_name)
+        {
+            Command = $"ansible-playbook -l {host_name} /etc/ansible/mytask2.yml";
+            proc.StartInfo.Arguments = " -c \" " + Command + " \"";
+            proc.Start();
+            proc.WaitForExit();
+            proc.StartInfo.Arguments = " -c \" " + "cat /tmp/log_programs_x64.txt" + " \""; // Command,
+            proc.Start();
+            return proc.StandardOutput.ReadToEnd();
+        }
+        public string Proccess_(string host_name)
+        {
+            Command = $"ansible-playbook -l {host_name} /etc/ansible/mytask3.yml";
+            proc.StartInfo.Arguments = " -c \" " + Command + " \"";
+            proc.Start();
+            proc.WaitForExit();
+            proc.StartInfo.Arguments = " -c \" " + "cat /tmp/log_process.txt" + " \""; // Command,
+            proc.Start();
             return proc.StandardOutput.ReadToEnd();
         }
         public string MyCommand(string command) // host_name
         {
             // Command = $"ansible {host_name} -m win_shell -a \"{command}\"";
-            proc.StartInfo.Arguments = " -c \" " + command + " \""; // Command
+            proc.StartInfo.Arguments = " -c \" " + $"{command}" + " \""; // Command,
             proc.Start();
+            proc.WaitForExit();
             return proc.StandardOutput.ReadToEnd();
         }
     } 
